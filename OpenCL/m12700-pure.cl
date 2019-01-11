@@ -354,7 +354,7 @@ __kernel void m12700_comp (KERN_ATTR_TMPS (mywallet_tmp_t))
   out[2] = swap32_S (out[2]);
   out[3] = swap32_S (out[3]);
 
-  char *pt = (char *) out;
+  u8 *pt = (u8 *) out;
   if (pt[0] != '{') return;
 
   for (int i = 1; i < 16; i++)
