@@ -12,6 +12,7 @@
 #include "inc_common.cl"
 #include "inc_simd.cl"
 #include "inc_hash_sha1.cl"
+#include "inc_hash_sha256.cl"
 #include "inc_cipher_aes.cl"
 
 #define COMPARE_S "inc_comp_single.cl"
@@ -53,6 +54,18 @@ DECLSPEC void hmac_sha1_run_V (u32x *w0, u32x *w1, u32x *w2, u32x *w3, u32x *ipa
   sha1_transform_vector (w0, w1, w2, w3, digest);
 }
 
+
+DECLSPEC int sha256_sieve(__global const pw_t *pw, const u32 expected_prefix)
+{
+
+  sha256_ctx_t sha256_ctx;
+  sha256_init (&sha256_ctx);
+  sha256_update_global_swap (&sha256_ctx, pw->i, pw->pw_len);
+  sha256_final(&sha256_ctx);
+
+  return (sha256_ctx.h[0] & 0xfffff000) == expected_prefix;
+}
+
 __kernel void m12700_init (KERN_ATTR_TMPS (mywallet_tmp_t))
 {
   /**
@@ -62,6 +75,16 @@ __kernel void m12700_init (KERN_ATTR_TMPS (mywallet_tmp_t))
   const u64 gid = get_global_id (0);
 
   if (gid >= gid_max) return;
+
+  u32 expected_prefix = salt_bufs[salt_pos].salt_sign[0];
+
+  tmps[gid].stop = 0;
+  if (expected_prefix != 0xffffffff && !sha256_sieve(&pws[gid], expected_prefix))
+  {
+    // Stop further processing
+    tmps[gid].stop = 1;
+    return;
+  }
 
   sha1_hmac_ctx_t sha1_hmac_ctx;
 
@@ -148,6 +171,8 @@ __kernel void m12700_loop (KERN_ATTR_TMPS (mywallet_tmp_t))
 
   if ((gid * VECT_SIZE) >= gid_max) return;
 
+  if (tmps[gid].stop == 1) return;
+
   u32x ipad[5];
   u32x opad[5];
 
@@ -233,6 +258,7 @@ __kernel void m12700_comp (KERN_ATTR_TMPS (mywallet_tmp_t))
   const u64 lid = get_local_id (0);
   const u64 lsz = get_local_size (0);
 
+  if (tmps[gid].stop == 1) return;
   /**
    * aes shared
    */
@@ -328,26 +354,21 @@ __kernel void m12700_comp (KERN_ATTR_TMPS (mywallet_tmp_t))
   out[2] = swap32_S (out[2]);
   out[3] = swap32_S (out[3]);
 
-  if ((out[0] & 0xff) != '{') return;
-
   char *pt = (char *) out;
+  if (pt[0] != '{') return;
 
-  for (int i = 1; i < 16 - 6; i++)
-  {
-    if (pt[i + 0] != '"') continue;
-    if (pt[i + 1] != 'g') continue;
-    if (pt[i + 2] != 'u') continue;
-    if (pt[i + 3] != 'i') continue;
-    if (pt[i + 4] != 'd') continue;
-    if (pt[i + 5] != '"') continue;
+  for (int i = 1; i < 16; i++)
+      if (pt[i] > 127) return;
 
-    const u32 r0 = data[0];
-    const u32 r1 = data[1];
-    const u32 r2 = data[2];
-    const u32 r3 = data[3];
+  // We have 256 * 2^15 confidence here.
+  // TODO: verify next block
 
-    #define il_pos 0
+  const u32 r0 = data[0];
+  const u32 r1 = data[1];
+  const u32 r2 = data[2];
+  const u32 r3 = data[3];
 
-    #include COMPARE_M
-  }
+  #define il_pos 0
+
+  #include COMPARE_M
 }

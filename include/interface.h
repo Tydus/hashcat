@@ -801,6 +801,7 @@ typedef struct mywallet_tmp
   u32 dgst[10];
   u32 out[10];
 
+  u8  stop;
 } mywallet_tmp_t;
 
 typedef struct sha1aix_tmp
