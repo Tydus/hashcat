@@ -258,7 +258,7 @@ __kernel void m12700_comp (KERN_ATTR_TMPS (mywallet_tmp_t))
   const u64 lid = get_local_id (0);
   const u64 lsz = get_local_size (0);
 
-  if (tmps[gid].stop == 1) return;
+  //if (tmps[gid].stop == 1) return;
   /**
    * aes shared
    */
