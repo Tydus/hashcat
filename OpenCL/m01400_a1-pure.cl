@@ -46,6 +46,15 @@ __kernel void m01400_mxx (KERN_ATTR_BASIC ())
 
     sha256_final (&ctx);
 
+    ctx.h[0] &= 0xfffff000;
+    ctx.h[1] = 0;
+    ctx.h[2] = 0;
+    ctx.h[3] = 0;
+    ctx.h[4] = 0;
+    ctx.h[5] = 0;
+    ctx.h[6] = 0;
+    ctx.h[7] = 0;
+
     const u32 r0 = ctx.h[DGST_R0];
     const u32 r1 = ctx.h[DGST_R1];
     const u32 r2 = ctx.h[DGST_R2];
@@ -99,6 +108,15 @@ __kernel void m01400_sxx (KERN_ATTR_BASIC ())
     sha256_update_global_swap (&ctx, combs_buf[il_pos].i, combs_buf[il_pos].pw_len & 255);
 
     sha256_final (&ctx);
+
+    ctx.h[0] &= 0xfffff000;
+    ctx.h[1] = 0;
+    ctx.h[2] = 0;
+    ctx.h[3] = 0;
+    ctx.h[4] = 0;
+    ctx.h[5] = 0;
+    ctx.h[6] = 0;
+    ctx.h[7] = 0;
 
     const u32 r0 = ctx.h[DGST_R0];
     const u32 r1 = ctx.h[DGST_R1];

@@ -6005,8 +6005,8 @@ int sha256_parse_hash (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNU
 
   token.token_cnt  = 1;
 
-  token.len_min[0] = 64;
-  token.len_max[0] = 64;
+  token.len_min[0] = 5;
+  token.len_max[0] = 5;
   token.attr[0]    = TOKEN_ATTR_VERIFY_LENGTH
                    | TOKEN_ATTR_VERIFY_HEX;
 
@@ -6016,23 +6016,10 @@ int sha256_parse_hash (u8 *input_buf, u32 input_len, hash_t *hash_buf, MAYBE_UNU
 
   u8 *hash_pos = token.buf[0];
 
+  memset(digest, 0, 32);
   digest[0] = hex_to_u32 (hash_pos +  0);
-  digest[1] = hex_to_u32 (hash_pos +  8);
-  digest[2] = hex_to_u32 (hash_pos + 16);
-  digest[3] = hex_to_u32 (hash_pos + 24);
-  digest[4] = hex_to_u32 (hash_pos + 32);
-  digest[5] = hex_to_u32 (hash_pos + 40);
-  digest[6] = hex_to_u32 (hash_pos + 48);
-  digest[7] = hex_to_u32 (hash_pos + 56);
 
   digest[0] = byte_swap_32 (digest[0]);
-  digest[1] = byte_swap_32 (digest[1]);
-  digest[2] = byte_swap_32 (digest[2]);
-  digest[3] = byte_swap_32 (digest[3]);
-  digest[4] = byte_swap_32 (digest[4]);
-  digest[5] = byte_swap_32 (digest[5]);
-  digest[6] = byte_swap_32 (digest[6]);
-  digest[7] = byte_swap_32 (digest[7]);
 
   if (hashconfig->opti_type & OPTI_TYPE_PRECOMPUTE_MERKLE)
   {
@@ -24574,10 +24561,10 @@ int hashconfig_init (hashcat_ctx_t *hashcat_ctx)
                                             | OPTI_TYPE_NOT_ITERATED
                                             | OPTI_TYPE_NOT_SALTED
                                             | OPTI_TYPE_RAW_HASH;
-                 hashconfig->dgst_pos0      = 3;
-                 hashconfig->dgst_pos1      = 7;
+                 hashconfig->dgst_pos0      = 0;
+                 hashconfig->dgst_pos1      = 1;
                  hashconfig->dgst_pos2      = 2;
-                 hashconfig->dgst_pos3      = 6;
+                 hashconfig->dgst_pos3      = 3;
                  hashconfig->st_hash        = ST_HASH_01400;
                  hashconfig->st_pass        = ST_PASS_HASHCAT_PLAIN;
                  break;

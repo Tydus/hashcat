@@ -227,7 +227,19 @@ __kernel void m01400_m04 (KERN_ATTR_BASIC ())
     we_t = SHA256_EXPAND (wc_t, w7_t, wf_t, we_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, c, d, e, f, g, h, a, b, we_t, SHA256C3e);
     wf_t = SHA256_EXPAND (wd_t, w8_t, w0_t, wf_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, b, c, d, e, f, g, h, a, wf_t, SHA256C3f);
 
-    COMPARE_M_SIMD (d, h, c, g);
+    a += SHA256M_A;
+    a &= 0xfffff000;
+    a -= SHA256M_A;
+
+    b = -SHA256M_B;
+    c = -SHA256M_C;
+    d = -SHA256M_D;
+    e = -SHA256M_E;
+    f = -SHA256M_F;
+    g = -SHA256M_G;
+    h = -SHA256M_H;
+
+    COMPARE_M_SIMD (a, b, c, d);
   }
 }
 
@@ -285,19 +297,19 @@ __kernel void m01400_s04 (KERN_ATTR_BASIC ())
    * reverse
    */
 
-  u32 a_rev = digests_buf[digests_offset].digest_buf[0];
-  u32 b_rev = digests_buf[digests_offset].digest_buf[1];
-  u32 c_rev = digests_buf[digests_offset].digest_buf[2];
-  u32 d_rev = digests_buf[digests_offset].digest_buf[3];
-  u32 e_rev = digests_buf[digests_offset].digest_buf[4];
-  u32 f_rev = digests_buf[digests_offset].digest_buf[5];
-  u32 g_rev = digests_buf[digests_offset].digest_buf[6];
-  u32 h_rev = digests_buf[digests_offset].digest_buf[7];
+  // u32 a_rev = digests_buf[digests_offset].digest_buf[0];
+  // u32 b_rev = digests_buf[digests_offset].digest_buf[1];
+  // u32 c_rev = digests_buf[digests_offset].digest_buf[2];
+  // u32 d_rev = digests_buf[digests_offset].digest_buf[3];
+  // u32 e_rev = digests_buf[digests_offset].digest_buf[4];
+  // u32 f_rev = digests_buf[digests_offset].digest_buf[5];
+  // u32 g_rev = digests_buf[digests_offset].digest_buf[6];
+  // u32 h_rev = digests_buf[digests_offset].digest_buf[7];
 
-  SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
-  SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
-  SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
-  SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
+  // SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
+  // SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
+  // SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
+  // SHA256_STEP_REV (a_rev, b_rev, c_rev, d_rev, e_rev, f_rev, g_rev, h_rev);
 
   /**
    * loop
@@ -463,7 +475,7 @@ __kernel void m01400_s04 (KERN_ATTR_BASIC ())
     w7_t = SHA256_EXPAND (w5_t, w0_t, w8_t, w7_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, b, c, d, e, f, g, h, a, w7_t, SHA256C37);
     w8_t = SHA256_EXPAND (w6_t, w1_t, w9_t, w8_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, a, b, c, d, e, f, g, h, w8_t, SHA256C38);
 
-    if (MATCHES_NONE_VS (h, d_rev)) continue;
+    //if (MATCHES_NONE_VS (h, d_rev)) continue;
 
     w9_t = SHA256_EXPAND (w7_t, w2_t, wa_t, w9_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, h, a, b, c, d, e, f, g, w9_t, SHA256C39);
     wa_t = SHA256_EXPAND (w8_t, w3_t, wb_t, wa_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, g, h, a, b, c, d, e, f, wa_t, SHA256C3a);
@@ -473,7 +485,19 @@ __kernel void m01400_s04 (KERN_ATTR_BASIC ())
     we_t = SHA256_EXPAND (wc_t, w7_t, wf_t, we_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, c, d, e, f, g, h, a, b, we_t, SHA256C3e);
     wf_t = SHA256_EXPAND (wd_t, w8_t, w0_t, wf_t); SHA256_STEP (SHA256_F0o, SHA256_F1o, b, c, d, e, f, g, h, a, wf_t, SHA256C3f);
 
-    COMPARE_S_SIMD (d, h, c, g);
+    a += SHA256M_A;
+    a &= 0xfffff000;
+    a -= SHA256M_A;
+
+    b = -SHA256M_B;
+    c = -SHA256M_C;
+    d = -SHA256M_D;
+    e = -SHA256M_E;
+    f = -SHA256M_F;
+    g = -SHA256M_G;
+    h = -SHA256M_H;
+
+    COMPARE_S_SIMD (a, b, c, d);
   }
 }
 
