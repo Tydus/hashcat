@@ -87,7 +87,7 @@ static const char *ST_HASH_00900 = "afe04867ec7a3845145579a95f72eca7";
 static const char *ST_HASH_01000 = "b4b9b02e6f09a9bd760f388b67351e2b";
 static const char *ST_HASH_01100 = "c896b3c6963e03c86ade3a38370bbb09:54161084332";
 static const char *ST_HASH_01300 = "e4fa1555ad877bf0ec455483371867200eee89550a93eff2f95a6198";
-static const char *ST_HASH_01400 = "127e6fbfe24a750e72930c220a8e138275656b8e5d8f48a98c3c92df2caba935";
+static const char *ST_HASH_01400 = "127e6";
 static const char *ST_HASH_01410 = "5bb7456f43e3610363f68ad6de82b8b96f3fc9ad24e9d1f1f8d8bd89638db7c0:12480864321";
 static const char *ST_HASH_01411 = "{SSHA256}L5Wk0zPY2lmoR5pH20zngq37KkxFwgTquEhx95rxfVk3Ng==";
 static const char *ST_HASH_01420 = "816d1ded1d621873595048912ea3405d9d42afd3b57665d9f5a2db4d89720854:36176620";
