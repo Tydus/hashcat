@@ -4645,7 +4645,7 @@ int opencl_session_begin (hashcat_ctx_t *hashcat_ctx)
     u64 size_rules   = (u64) straight_ctx->kernel_rules_cnt * sizeof (kernel_rule_t);
     u64 size_rules_c = (u64) KERNEL_RULES                   * sizeof (kernel_rule_t);
 
-    u64 size_plains  = (u64) hashes->digests_cnt * sizeof (plain_t);
+    u64 size_plains  = (u64) hashes->digests_cnt * 2000 * sizeof (plain_t);
     u64 size_salts   = (u64) hashes->salts_cnt   * sizeof (salt_t);
     u64 size_esalts  = (u64) hashes->digests_cnt * (u64) hashconfig->esalt_size;
     u64 size_shown   = (u64) hashes->digests_cnt * sizeof (u32);

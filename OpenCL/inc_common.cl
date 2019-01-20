@@ -159,7 +159,7 @@ DECLSPEC void mark_hash (__global plain_t *plains_buf, __global u32 *d_result, c
 {
   const u32 idx = atomic_inc (d_result);
 
-  if (idx >= digests_cnt)
+  if (idx >= digests_cnt * 2000)
   {
     // this is kind of tricky: we *must* call atomic_inc() to know about the current value from a multi-thread perspective
     // this action creates a buffer overflow, so we need to fix it here
